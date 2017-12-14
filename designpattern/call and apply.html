@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js call和apply</title>
+</head>
+<body>
+	<div id="div1" class="rendermap-box"></div>
+	<script type="text/javascript">
+		/*
+			call 和 apply
+				1.改变this 指向
+		*/
+		(function(){
+			var obj1 = {
+				name : "obj1"
+			}
+			var obj2 = {
+				name : "obj2"
+			}
+			window.name = "window";
+
+			var getName = function(){
+				console.log(this.name);
+			};
+			var getName2 = function(){
+				console.log(this.name);
+			}.bind(obj2);
+			//getName();
+			//getName.call(obj1);
+			//getName.apply(obj2);
+			//getName();
+			//getName2();
+
+
+			/*
+				使用apply修正document.getElementById中的this指向document
+				从而实现getId = document.getElementById;
+			*/
+
+			/*
+			document.getElementById = (
+				function(fun){
+					return function(){
+						return fun.apply(document,arguments);
+					}
+				}
+			)(document.getElementById);
+			var getId = document.getElementById
+			var getId = document.getElementById.bind(document);
+			var oDiv = getId("div1");
+			console.log(oDiv.id);
+			*/
+
+			/*
+				Function.prototype.bind();用来指定函数内部的this指向
+			*/
+			//模拟源生的bind实现
+			Function.prototype.bind = function(){
+				var self = this;  //保存原函数
+				var context = [].shift.apply(arguments); //需要绑定的this上下文
+				var args = [].slice.call(arguments); //把剩余的参数转换为数组
+				return function(){   //返回一个新函数
+					return self.apply(context,[].concat.call(args,[].slice.call(arguments)));
+				}
+			};
+			var p1 = {
+				name : "p1",
+				age : 18
+			}
+			var p2 = {
+				name : "p2",
+				age : 20
+			}
+			var getAge = function(){
+				console.log( this.age );
+			}.bind(p2);
+			//getAge();
+			var func = function(a,b,c,d){
+				console.log(this.name);
+				console.log(arguments);
+			}.bind(p1,1,2);
+			//func(3,4);
+
+
+			var obja = {
+				"first":1
+			};
+			Array.prototype.push.call(obja,{"first":"a"});
+			console.log(obja[0].first);
+
+		}());
+	</script>
+</body>
+</html>

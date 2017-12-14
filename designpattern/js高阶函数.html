@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js高阶函数</title>
+</head>
+<body>
+	<script type="text/javascript">
+		/*
+			js高阶函数
+				满足一下任一条件就是高阶函数
+				a:函数可以作为参数被传递
+				    1.回调函数
+						如：ajax异步请求的应用中
+						 Array.prototype.sort
+				b:函数可以作为返回值被输出
+				    getSingle() 单例模式
+			高阶函数实现AOP
+
+
+			
+
+		*/
+		//回调函数
+		var getUserInfo = function(userId,callback){
+			$.ajax("http://xxx.com/getUserInfo?" + userId,function(data){
+				if(typeof callback === "function"){
+					callback(data);
+				}
+			})
+		}
+		/*getUserInfo(100023,function(data){
+			alert(data);
+		});*/
+
+		/*
+			var appendDiv = function(callback){
+				for (var i=0;i<100;i++ ) {
+					var div = document.createElement("div");
+					div.innerHTML = i;
+					document.body.append(div);
+					//div.style.display = "none";
+					if(typeof callback === "function"){
+						callback();
+					}
+				}
+			}
+			appendDiv(function (node){
+				node.style.display = "none";
+			});
+		*/
+
+		/*var array = [2,5,6,7,10,0,44,1];
+			alert(array.sort(function(a,b){
+				return a-b;
+			}));
+		*/
+
+		var Type = {};
+		for(var i=0,type;type=["String","Number","Boolean","Undefied","Object","Null","Function","Array","RegExp"][i++];){
+			(function(type){
+				Type["is" + type] = function(obj){
+					return Object.prototype.toString.call(obj) === "[object " + type + "]";
+				}
+			}(type));
+		}
+		//console.log(Type.isString(""));
+		//console.log(Type.isArray([]));
+
+		//单例模式
+		var getSingle = function(fn){
+			var ret;
+			return function(){
+				return ret || (ret = fn.apply(this,arguments));
+			};
+		};
+		var createDiv = getSingle(function(){
+			return document.createElement("div");
+		});
+		var createP = getSingle(function(){
+			return document.createElement("p");
+		});
+		/*var div = createDiv();
+		console.log(div);
+		var p = createP();
+		var div1 = createDiv();
+		console.log(p);
+		console.log(div === div1);*/
+
+		//高阶函数实现AOP
+		Function.prototype.before = function(beforefn){
+			var __self = this;
+			return function(){
+				beforefn.apply(this,arguments);
+				return __self.apply(this,arguments);
+			}
+		}
+		Function.prototype.after = function(afterfn){
+			var __self = this;
+			return function(){
+				var ret = __self.apply(this.arguments);
+				afterfn.apply(this,arguments);
+				return ret;
+			}
+		}
+		var func = function(){
+			var sum = 1;
+			for (var i = 100000000; i >= 1; i--) {
+				sum += i;
+			}
+			console.log(sum);
+		};
+		var date;
+		func = func.before(function(){
+			date = new Date();
+			console.log("函数开始执行");
+		}).after(function(){
+			date = new Date() - date;
+			console.log("函数执行结束共用时： " + date + " 毫秒");
+		});
+		//alert(func);
+		func();
+	</script>
+</body>
+</html>

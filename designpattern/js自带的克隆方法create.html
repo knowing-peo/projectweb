@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js自带的克隆方法create</title>
+</head>
+<body>
+	<div id="showinfo"></div>
+	<script type="text/javascript">
+		var getId = function(id){
+			return document.getElementById(id);
+		}
+		var oDiv = getId("showinfo");
+		var Plane = function(){
+			this.blood = 100;
+			this.attackLevel = 1;
+			this.defenseLevel = 1;
+		}
+		var plane = new Plane();
+		plane.blood = 500;
+		plane.attackLevel = 2;
+		plane.defenseLevel = 3;
+		//Object.create 的兼容写法
+		Object.create = Object.create || function(obj){
+			var F = function(){};
+			F.prototype = obj;
+			return new F();
+		}
+		var cloneplane1 = Object.create(new Plane());
+		var cloneplane2 = Object.create(plane);
+		console.log(cloneplane1.blood);
+		console.log(cloneplane2.blood);
+		console.log(plane);
+		console.log(plane.__proto__ === Plane.prototype)
+
+	</script>
+</body>
+</html>

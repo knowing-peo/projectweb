@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js 闭包</title>
+	<style type="text/css">
+		.box{
+			float:left;
+			width:180px;
+			height:120px;
+			margin:4px 12px;
+			background:#f00;
+		}
+	</style>
+</head>
+<body>
+	<div id="rendermap-box" class="rendermap-box">
+		<div class="box">0</div>
+		<div class="box">1</div>
+		<div class="box">2</div>
+		<div class="box">3</div>
+		<div class="box">4</div>
+	</div>
+	<button id="execute">点击我打开电视机</button>
+	<button id="undo">点击我关闭电视机</button>
+	<script type="text/javascript">
+		(function(){
+			/*
+				闭包
+			*/
+			var fun = function(){
+				var a = 0;
+				return function(){
+					a++;
+					console.log(a);
+				}
+			}
+			var f = fun();
+			/*f();
+			f();
+			f();*/
+			/*var oBox = document.getElementById("rendermap-box");
+			var oDivs = oBox.getElementsByTagName("div");
+			for(var i=0;i<oDivs.length;i++){
+				//oDivs[i].index = i;
+				(function(i){
+					oDivs[i].onclick = function(){
+						alert(i);
+					}
+				}(i))
+			}*/
+			var Type = {};
+			//简写
+			for(var i=0,type;type = ["Object","String","Number","Array","Function","Date","Null","Boolean","RegExp","Undefined"][i++];){
+				(function(type){
+					Type["is" + type] = function(arg){
+						console.log(type);
+						return Object.prototype.toString.call(arg) === "[object "+ type +"]";
+					}
+				}(type));
+			}
+			/*var types = ["Object","String","Number","Array","Function","Date","Null","Boolean","RegExp","Undefined"];
+			for(var i=0;i<types.length;i++){
+				var type = types[i];
+				(function(type){
+					Type["is" + type] = function(obj){
+						console.log(type);
+						return Object.prototype.toString.call(obj) === "[object " + type + "]";
+					}
+				}(type));
+			}*/
+			//console.log({} instanceof Object)
+			/*console.log(Object.prototype.toString.call({}));
+			console.log(Object.prototype.toString.call([]));
+			console.log(Object.prototype.toString.call(new Date()));
+			console.log(Object.prototype.toString.call(""));
+			console.log(Object.prototype.toString.call(1222.1));
+			console.log(Object.prototype.toString.call(null));
+			console.log(Object.prototype.toString.call(undefined));
+			console.log(Object.prototype.toString.call(true));
+			console.log(Object.prototype.toString.call(/\d/));
+			console.log(Object.prototype.toString.call(function(){}));*/
+			//console.log(Type.isArray([])); //返回true
+			//console.log(Type.isString("")); //返回true
+
+			//计算数的乘积
+			/*var mult = function(){
+				var a = 1;
+				for(var i = 0; i<arguments.length;i++){
+					a *= arguments[i];
+				}
+				return a;
+			}*/
+			//现在我想把传入相同的数据的乘积，缓存起来，避免重复计算
+			/*var cache = {};
+			var mult = function(){
+				var args = Array.prototype.join.call(arguments); //把参数变为一串字符串
+				if( cache.args ){
+					return cache[args];
+				}
+				var a = 1;
+				for(var i = 0; i<arguments.length;i++){
+					a *= arguments[i];
+				}
+				return cache[args] = a;
+			}*/
+			//cache 这个变量仅在 mult函数中被使用，不需要暴露在全局作用域下
+			//可以用闭包把它封闭起来，这样可以减少全局变量，也避免在其他地方被修改而引发错误
+			//计算数的乘积
+			/*var mult = (function(){
+				var cache = {};
+				return function(){
+					var args = Array.prototype.join.call(arguments,",");//参数变为一串字符串
+					if( cache.args ){
+						return cache[args];
+					}
+					var a = 1;
+					for(var i = 0; i<arguments.length;i++){
+						a *= arguments[i];
+					}
+					return cache[args] = a;
+				}
+			})()*/
+
+			//提炼函数是代码重构中的一种常见技巧
+			//如果一个大函数中有一些代码块能独立出来，我们常常把这些代码块封装在独立的
+			//小函数里面。
+
+			var mult = (function(){
+				var cache = {};
+				var calculate = function(){  //封闭calculate函数
+					var a = 1;
+					for(var i = 0; i<arguments.length;i++){
+						a *= arguments[i];
+					}
+					return a;
+				};
+				return function(){
+					//把参数转变为一串字符串存储在args中
+					var args = Array.prototype.join.call(arguments,",");
+					// in运算符  如果指定的属性在指定的对象或者原型链中，则in运算符返回true
+					if( args in cache ){   
+						return cache[args];
+					}
+					return cache[args] = calculate.apply(null,arguments);
+				}
+			})()
+			//console.log(mult(1,2,3,4));
+			//console.log(mult(1,2,3,4));
+
+			
+			//对象实现命令模式
+			/*var Tv = {
+				open: function(){
+					console.log("打开电视机");
+				},
+				close:function(){
+					console.log("关闭电视机");
+				}
+			}
+			var OpenTvCommand = function(receive){
+				this.receive = receive;
+			}
+			OpenTvCommand.prototype.execute = function(){
+				this.receive.open();
+			}
+			OpenTvCommand.prototype.undo = function(){
+				this.receive.close();
+			}
+			var setCommand = function(command){
+				document.getElementById("execute").onclick = function(){
+					command.execute();
+				}
+				document.getElementById("undo").onclick = function(){
+					command.undo();
+				}
+			}
+			setCommand(new OpenTvCommand(Tv));
+			*/
+
+			//闭包实现命令模式
+			var Tv = {
+				open:function(){
+					console.log("打开电视机");
+				},
+				close:function(){
+					console.log("关闭电视机");
+				}
+			}
+			var createCommand = function(receive){
+				var execute = function(){
+					return receive.open();
+				}
+				var undo = function(){
+					return receive.close();
+				}
+				return {
+					execute: execute,
+					undo :undo
+				}
+			}
+			var setCommand = function(command){
+				document.getElementById("execute").onclick = function(){
+					command.execute();
+				}
+				document.getElementById("undo").onclick = function(){
+					command.undo();
+				}
+			}
+			setCommand(new createCommand(Tv));
+		}());
+	</script>
+</body>
+</html>

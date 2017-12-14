@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js 运算符</title>
+</head>
+<body>
+	<script type="text/javascript">
+		/*
+			js特殊运算符
+			1. in  运算符
+				如果指定的属性在指定的对象或者原型链中，则in运算符返回true
+				语法：  prop in object
+			2. delete 操作符
+				用于删除对象的某个属性
+				语法：delete expression 
+				expressio的计算结果应该是某个属性的引用
+				（如object.property ; object['property']）
+			3.instanceof 运算符
+				用来测试一个对象在其原型链中是否存在一个构造函数的 prototype 属性。
+				语法：object instanceof constructor
+				instanceof 运算符用来检测 constructor.prototype 是否存在于参数 object 的原型链上。
+			4.typeof 操作符
+				返回一个字符串，指示未经计算的操作数的类型。
+				语法：typeof operand 
+				operand 是一个表达式，表示对象或原始值，其类型将被返回。
+				类型	结果
+				Undefined	"undefined"
+				Null	"object"（见下文）
+				Boolean	"boolean"
+				Number	"number"
+				String	"string"
+				Symbol （ECMAScript 6 新增）	"symbol"
+				宿主对象（由JS环境提供）	Implementation-dependent
+				函数对象（[[Call]] 在ECMA-262条款中实现了）	"function"
+				任何其他对象	"object"
+
+		*/
+
+		var array = ["head","body","html","title"];
+		//console.log(0 in array);  //返回 true
+		//console.log(5 in array);  //返回 false
+		//console.log("length" in array); //true
+		var person = {
+			name : "phk",
+			age : 26,
+			sex : 1
+		}
+		console.log("name" in person);  //返回 true
+		console.log("length" in person); //返回 false
+		console.log("sex" in person); //返回 true
+		delete person.sex;
+		console.log("sex" in person); //返回 false
+		//内置对象
+		console.log("PI" in Math);
+		var C = function(){};
+		var D = function(){};
+		var f = new C();
+
+		console.log(f instanceof C); //返回true
+		console.log(Object.getPrototypeOf(f) === C.prototype); //返回true
+		console.log(f instanceof D); //返回false
+		console.log(f instanceof Object); //返回true
+		console.log("f:  " + Object.prototype.isPrototypeOf(f));
+		console.log(C.prototype instanceof Object);
+
+
+		console.log(typeof ""); // 返回 “string”
+		console.log(typeof function(){}); // 返回 "function"
+		console.log(typeof 0); // 返回 "number"
+		console.log(typeof []); // 返回 "object"
+		var a;
+		console.log(typeof a); // 返回 "undefined"
+		console.log(typeof true); // 返回 "boolean"
+		console.log(typeof null); // 返回 "object"
+		console.log(typeof window); // 返回 "object"
+		console.log(typeof window); // 返回 "object"
+		let s1 = Symbol();
+		console.log(typeof s1);
+	</script>
+</body>
+</html>
