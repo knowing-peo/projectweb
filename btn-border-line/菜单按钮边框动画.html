@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>菜单按钮边框动画</title>
+	<style type="text/css">
+		*{margin:0; padding:0;}
+		.box{width:500px;height:300px;margin:50px auto 0;border:1px solid #333;}
+		.btn-line-border-1{
+			position:relative;
+			text-align:center;
+			color:#333;
+			font-size:22px;
+			font-family:"Microsoft yahei";
+			cursor:pointer;
+			padding: 12px 40px 10px;
+			background-color1:#00f;
+			box-shadow: 0 0 1px #aaa;
+			margin:60px 40px;
+		}
+		.btn-line-border-1:after,.btn-line-border-1:before{
+			content: "";
+			border-style:solid;
+			border-width:0;
+			width:24px;
+			height:24px;
+			position:absolute;
+			border-color:transparent;
+			transition:all 0.25s;
+			-webkit-transition:all 0.25s;
+		}
+		.btn-line-border-1:after{
+			border-color:#00f;
+			border-right-width:2px;
+			border-top-width:2px;
+			right:-5px;
+			top:-5px;
+		}
+		.btn-line-border-1:before{
+			border-color:#00f;
+			border-left-width:2px;
+			border-bottom-width:2px;
+			left:-5px;
+			bottom:-5px;
+		}
+		.btn-line-border-1:hover{
+			background-color1:#00f;
+		}
+		.btn-line-border-1:hover:before,.btn:hover:after{
+			width:100%;
+			height:100%;
+		}
+
+		.btn-line-border-2{
+			background:none;
+			box-sizing:border-box;
+			box-shadow:inset 0 0 0 0px transparent;
+			position:relative;
+			text-align:center;
+			color:#333;
+			font-size:22px;
+			font-family:"Microsoft yahei";
+			cursor:pointer;
+			padding: 12px 40px 10px;
+			margin:60px 40px;
+			box-shadow:0 0 0 1px #e0e0e0;
+		}
+		.btn-line-border-2:before,.btn-line-border-2:after{
+			content:"";
+			display:block;
+			position:absolute;
+			box-sizing:border-box;
+			border:2px solid transparent;
+			width:0;
+			height:0;
+			box-sizing:border-box;
+		}
+		.btn-line-border-2:before{
+			bottom:0;
+			right:0;
+			-webkit-transition:border-color 0s ease-in 0.4s,width 0.2s ease-in 0.2s,height 0.2s ease-in;
+			transition:border-color 0s ease-in 0.4s,width 0.2s ease-in 0.2s,height 0.2s ease-in;
+		}
+		.btn-line-border-2:after{
+			top:0;
+			left:0;
+			-webkit-transition:border-color 0s ease-in 0.8s,width 0.2s ease-in 0.6s,height 0.2s ease-in 0.4;
+			transition:border-color 0s ease-in 0.8s,width 0.2s ease-in 0.6s,height 0.2s ease-in 0.4s;
+		}
+		.btn-line-border-2:hover:before{
+			border-bottom-color:#00f;
+			border-left-color:#00f;
+			-webkit-transition:border-color 0s ease-out 0.4s,width 0.2s ease-out 0.4s,height 0.2s ease-out 0.6s;
+			transition:border-color 0s ease-out 0.4s,width 0.2s ease-out 0.4s,height 0.2s ease-out 0.6s;
+		}
+		.btn-line-border-2:hover:after{
+			border-top-color:#00f;
+			border-right-color:#00f;
+			/*border-right-color:#367dff;*/
+			-webkit-transition:width 0.2s ease-out,height 0.2s ease-out 0.2s;
+			transition:width 0.2s ease-out,height 0.2s ease-out 0.2s;
+		}
+		.btn-line-border-2:hover:before,.btn-line-border-2:hover:after{
+			width:100%;
+			height:100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="btn btn-line-border-1">滚动边框按钮transition</div>
+		<div class="btn btn-line-border-2">滚动边框按钮ease-in-out</div>
+	</div>
+</body>
+</html>
